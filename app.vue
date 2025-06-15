@@ -104,6 +104,26 @@
           </div>
         </div>
       </div>
+
+      <div v-if="data.increase !== data.increasesDone" class="relative w-full pb-[56.25%] h-0">
+        <iframe
+            class="absolute top-0 left-0 w-full h-full"
+            src="https://www.youtube.com/embed/T26XaiSL0aM?mute=1&autoplay=0"
+            title="YouTube video player"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+      </div>
+      <div v-else class="relative w-full pb-[56.25%] h-0">
+        <iframe
+            class="absolute top-0 left-0 w-full h-full"
+            src="https://www.youtube.com/embed/mxM5XXCLDlg?mute=1&autoplay=0"
+            title="YouTube video player"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+      </div>
+
       <div class="flex flex-col gap-2">
         <label for="reset-modal" class="btn btn-outline btn-error btn-md">
           Projekt zurücksetzen

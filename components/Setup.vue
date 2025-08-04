@@ -105,7 +105,7 @@
               localData.increase > 0 &&
               localData.increasesDone >= localData.increase &&
               localData.rowsWorked < 8 &&
-              localData.decreasesDone < localData.increase &&
+              localData.decreasesDone <= localData.increase &&
               localData.decreasesDone >= localData.decrease
             "
             @click="handleStartApp"

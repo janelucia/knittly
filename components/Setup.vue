@@ -136,13 +136,7 @@
 </template>
 
 <script setup lang="ts">
-interface KnittingData {
-  rowsWorked: number;
-  increasesDone: number;
-  decreasesDone: number;
-  increase: number;
-  decrease: number;
-}
+import type { KnittingData } from '~/types/knitting'
 
 const emit = defineEmits<{
   startApp: [data: KnittingData];
@@ -157,22 +151,7 @@ const localData = reactive<KnittingData>({
 });
 
 const handleStartApp = () => {
-  // Set decrease equal to increase (Sophie Scarf pattern)
   localData.decrease = localData.increase;
-
-  // Emit the data to parent component
   emit("startApp", { ...localData });
 };
-
-// Load existing data if available
-const loadData = () => {
-  const savedData = localStorage.getItem("knittingData");
-  if (savedData) {
-    Object.assign(localData, JSON.parse(savedData));
-  }
-};
-
-onMounted(() => {
-  loadData();
-});
 </script>

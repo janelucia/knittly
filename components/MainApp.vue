@@ -21,28 +21,13 @@
               <div class="stat place-items-center py-3 px-4">
                 <div class="stat-title text-xs">Phase</div>
                 <div class="stat-value text-primary text-base lg:text-lg">
-                  {{
-                    data.increase === data.increasesDone &&
-                    data.decreasesDone >= data.decrease
-                      ? "Finale Reihen"
-                      : data.increase == data.increasesDone
-                      ? "Abnahmen"
-                      : "Zunahmen"
-                  }}
+                  {{ currentPhase }}
                 </div>
               </div>
               <div class="stat place-items-center py-3 px-4">
                 <div class="stat-title text-xs">Fortschritt</div>
                 <div class="stat-value text-secondary text-base lg:text-lg">
-                  {{
-                    data.increase == data.increasesDone
-                      ? data.decreasesDone + 1
-                      : data.increasesDone + 1
-                  }}/{{
-                    data.increase == data.increasesDone
-                      ? data.decrease
-                      : data.increase
-                  }}
+                  {{ progressCurrent }}/{{ progressTotal }}
                 </div>
               </div>
             </div>
@@ -56,26 +41,11 @@
         <div class="lg:col-span-2 space-y-4">
           <!-- Alert Messages -->
           <div
-            v-if="
-              data.rowsWorked == 7 &&
-              data.increase === data.increasesDone &&
-              data.decreasesDone >= data.decrease
-            "
+            v-if="data.rowsWorked == 7 && isComplete"
             class="alert alert-success shadow-sm"
           >
             <Icon name="material-symbols:celebration" class="text-xl" />
             <span><strong>Jetzt musst du abketten!</strong></span>
-          </div>
-          <div
-            v-else-if="
-              data.rowsWorked == 7 &&
-              data.increase === data.increasesDone &&
-              data.decreasesDone === data.decrease
-            "
-            class="alert alert-info shadow-sm"
-          >
-            <Icon name="material-symbols:info" class="text-xl" />
-            <span><strong>Jetzt die letzten 7 Reihen stricken!</strong></span>
           </div>
           <div
             v-else-if="data.rowsWorked == 7"
@@ -84,9 +54,7 @@
             <Icon name="material-symbols:warning" class="text-xl" />
             <span
               >Zeit für eine
-              <strong>{{
-                data.increase === data.increasesDone ? "Abnahme" : "Zunahme"
-              }}</strong
+              <strong>{{ inDecreasePhase ? "Abnahme" : "Zunahme" }}</strong
               >!</span
             >
           </div>
@@ -114,20 +82,12 @@
                 </div>
 
                 <button
-                  @click="
-                    data.rowsWorked >= 7
-                      ? markBlockComplete()
-                      : increaseAlreadyKnittedRows()
-                  "
+                  @click="increaseAlreadyKnittedRows()"
                   class="btn btn-circle btn-lg shadow-md hover:shadow-lg transition-all duration-200"
                   :class="data.rowsWorked >= 7 ? 'btn-success' : 'btn-primary'"
                 >
                   <Icon
-                    :name="
-                      data.rowsWorked >= 7
-                        ? 'material-symbols:check'
-                        : 'material-symbols:add'
-                    "
+                    :name="data.rowsWorked >= 7 ? 'material-symbols:check' : 'material-symbols:add'"
                     class="text-xl"
                   />
                 </button>
@@ -211,18 +171,9 @@
               <h3 class="text-base font-semibold mb-3">Video-Hilfe</h3>
               <div class="aspect-video rounded-lg overflow-hidden shadow-sm">
                 <iframe
-                  v-if="data.increase !== data.increasesDone"
                   class="w-full h-full"
-                  src="https://www.youtube.com/embed/T26XaiSL0aM?mute=1&autoplay=0"
-                  title="Zunahmen Tutorial"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                />
-                <iframe
-                  v-else
-                  class="w-full h-full"
-                  src="https://www.youtube.com/embed/mxM5XXCLDlg?mute=1&autoplay=0"
-                  title="Abnahmen Tutorial"
+                  :src="videoSrc"
+                  :title="inDecreasePhase ? 'Abnahmen Tutorial' : 'Zunahmen Tutorial'"
                   allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowfullscreen
                 />
@@ -276,13 +227,7 @@
 </template>
 
 <script setup lang="ts">
-interface KnittingData {
-  rowsWorked: number;
-  increasesDone: number;
-  decreasesDone: number;
-  increase: number;
-  decrease: number;
-}
+import type { KnittingData } from '~/types/knitting'
 
 const props = defineProps<{
   data: KnittingData;
@@ -294,24 +239,36 @@ const emit = defineEmits<{
   done: [];
 }>();
 
-const confirmReset = ref<boolean>(false);
+const confirmReset = ref(false);
+
+const inDecreasePhase = computed(() => props.data.increase === props.data.increasesDone);
+const isComplete = computed(() => inDecreasePhase.value && props.data.decreasesDone >= props.data.decrease);
+
+const currentPhase = computed(() => {
+  if (isComplete.value) return 'Finale Reihen';
+  if (inDecreasePhase.value) return 'Abnahmen';
+  return 'Zunahmen';
+});
+
+const progressCurrent = computed(() =>
+  inDecreasePhase.value ? props.data.decreasesDone + 1 : props.data.increasesDone + 1
+);
+
+const progressTotal = computed(() =>
+  inDecreasePhase.value ? props.data.decrease : props.data.increase
+);
 
 const progress = computed(() => {
   const totalSteps = (props.data.increase + props.data.decrease) * 8 + 7;
-  let completedSteps =
-    (props.data.increasesDone + props.data.decreasesDone) * 8;
-
-  if (
-    props.data.decrease > 0 &&
-    props.data.decreasesDone >= props.data.decrease
-  ) {
-    completedSteps += props.data.rowsWorked;
-  } else {
-    completedSteps += props.data.rowsWorked;
-  }
-
+  const completedSteps = (props.data.increasesDone + props.data.decreasesDone) * 8 + props.data.rowsWorked;
   return totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 });
+
+const videoSrc = computed(() =>
+  inDecreasePhase.value
+    ? 'https://www.youtube.com/embed/mxM5XXCLDlg?mute=1&autoplay=0'
+    : 'https://www.youtube.com/embed/T26XaiSL0aM?mute=1&autoplay=0'
+);
 
 const tips = [
   "Zähle deine Maschen regelmäßig, um Fehler früh zu erkennen.",
@@ -321,23 +278,19 @@ const tips = [
   "Bei Fehlern: Nicht gleich auftrennen, manchmal lässt sich korrigieren.",
 ];
 
-const currentTip = computed(() => {
-  const tipIndex =
-    (props.data.increasesDone + props.data.decreasesDone) % tips.length;
-  return tips[tipIndex];
-});
+const currentTip = computed(() =>
+  tips[(props.data.increasesDone + props.data.decreasesDone) % tips.length]
+);
 
 const increaseAlreadyKnittedRows = () => {
   const newData = { ...props.data };
 
   if (newData.rowsWorked >= 7) {
-    newData.rowsWorked = 0;
-    if (
-      newData.increase === newData.increasesDone &&
-      newData.decreasesDone >= newData.decrease
-    ) {
+    if (newData.increase === newData.increasesDone && newData.decreasesDone >= newData.decrease) {
       return;
-    } else if (newData.increase == newData.increasesDone) {
+    }
+    newData.rowsWorked = 0;
+    if (newData.increase === newData.increasesDone) {
       newData.decreasesDone++;
     } else {
       newData.increasesDone++;
@@ -347,30 +300,15 @@ const increaseAlreadyKnittedRows = () => {
   }
 
   emit("updateData", newData);
-  checkCompletion(newData);
+
+  if (newData.increase === newData.increasesDone && newData.decreasesDone >= newData.decrease && newData.rowsWorked >= 7) {
+    emit("done");
+  }
 };
 
 const decreaseAlreadyKnittedRows = () => {
   if (props.data.rowsWorked > 0) {
-    const newData = { ...props.data };
-    newData.rowsWorked--;
-    emit("updateData", newData);
-  }
-};
-
-const markBlockComplete = () => {
-  if (props.data.rowsWorked >= 7) {
-    increaseAlreadyKnittedRows();
-  }
-};
-
-const checkCompletion = (data: KnittingData) => {
-  if (
-    data.increase === data.increasesDone &&
-    data.decreasesDone >= data.decrease &&
-    data.rowsWorked >= 7
-  ) {
-    emit("done");
+    emit("updateData", { ...props.data, rowsWorked: props.data.rowsWorked - 1 });
   }
 };
 

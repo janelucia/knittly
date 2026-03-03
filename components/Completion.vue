@@ -23,7 +23,7 @@
           <!-- Action Buttons -->
           <div class="space-y-3">
             <button
-              @click="handleReset"
+              @click="emit('reset')"
               class="btn btn-primary btn-lg w-full shadow-md hover:shadow-lg transition-all duration-200"
             >
               <Icon name="material-symbols:refresh" class="text-xl" />
@@ -40,8 +40,4 @@
 const emit = defineEmits<{
   reset: [];
 }>();
-
-const handleReset = () => {
-  emit("reset");
-};
 </script>

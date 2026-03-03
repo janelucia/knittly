@@ -106,49 +106,31 @@
         <!-- Sidebar -->
         <div class="space-y-4">
           <!-- Progress Circle -->
-          <div class="card bg-base-100 shadow-sm border border-base-200">
-            <div class="card-body p-4 text-center">
-              <h3 class="text-base font-semibold mb-3">Fortschritt</h3>
-              <div class="flex justify-center">
-                <div
-                  class="radial-progress text-primary"
-                  :style="{
-                    '--value': progress,
-                    '--size': '6rem',
-                    '--thickness': '0.5rem',
-                  }"
-                >
-                  <div class="text-center">
-                    <div class="text-lg font-bold">
-                      {{ Math.round(progress) }}%
-                    </div>
-                    <div class="text-xs opacity-70">Fertig</div>
-                  </div>
+          <SidebarCard title="Fortschritt">
+            <div class="flex justify-center">
+              <div
+                class="radial-progress text-primary"
+                :style="{
+                  '--value': progress,
+                  '--size': '6rem',
+                  '--thickness': '0.5rem',
+                }"
+              >
+                <div class="text-center">
+                  <div class="text-lg font-bold">{{ Math.round(progress) }}%</div>
+                  <div class="text-xs opacity-70">Fertig</div>
                 </div>
               </div>
             </div>
-          </div>
+          </SidebarCard>
 
           <!-- Project Stats -->
-          <div class="card bg-base-100 shadow-sm border border-base-200">
-            <div class="card-body p-4">
-              <h3 class="text-base font-semibold mb-3">Projekt Details</h3>
-              <div class="space-y-2 text-sm">
-                <div class="flex justify-between">
-                  <span class="text-base-content/70">Zunahmen:</span>
-                  <span class="font-medium"
-                    >{{ data.increasesDone }}/{{ data.increase }}</span
-                  >
-                </div>
-                <div class="flex justify-between">
-                  <span class="text-base-content/70">Abnahmen:</span>
-                  <span class="font-medium"
-                    >{{ data.decreasesDone }}/{{ data.decrease }}</span
-                  >
-                </div>
-              </div>
+          <SidebarCard title="Projekt Details">
+            <div class="space-y-2 text-sm">
+              <StatRow label="Zunahmen" :done="data.increasesDone" :total="data.increase" />
+              <StatRow label="Abnahmen" :done="data.decreasesDone" :total="data.decrease" />
             </div>
-          </div>
+          </SidebarCard>
 
           <!-- Tips Card -->
           <div
@@ -166,20 +148,17 @@
           </div>
 
           <!-- Help Video (Compact) -->
-          <div class="card bg-base-100 shadow-sm border border-base-200">
-            <div class="card-body p-4">
-              <h3 class="text-base font-semibold mb-3">Video-Hilfe</h3>
-              <div class="aspect-video rounded-lg overflow-hidden shadow-sm">
-                <iframe
-                  class="w-full h-full"
-                  :src="videoSrc"
-                  :title="inDecreasePhase ? 'Abnahmen Tutorial' : 'Zunahmen Tutorial'"
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                />
-              </div>
+          <SidebarCard title="Video-Hilfe">
+            <div class="aspect-video rounded-lg overflow-hidden shadow-sm">
+              <iframe
+                class="w-full h-full"
+                :src="videoSrc"
+                :title="inDecreasePhase ? 'Abnahmen Tutorial' : 'Zunahmen Tutorial'"
+                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              />
             </div>
-          </div>
+          </SidebarCard>
         </div>
       </div>
 

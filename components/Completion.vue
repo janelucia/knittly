@@ -5,7 +5,6 @@
     <div class="w-full max-w-2xl">
       <div class="card bg-base-100 shadow-lg border border-base-200">
         <div class="card-body p-6 lg:p-8 text-center space-y-6">
-          <!-- Celebration Section -->
           <div class="space-y-4">
             <div class="text-6xl lg:text-8xl animate-bounce">🎉</div>
             <div class="space-y-2">
@@ -20,7 +19,6 @@
             </div>
           </div>
 
-          <!-- Action Buttons -->
           <div class="space-y-3">
             <button
               @click="emit('reset')"

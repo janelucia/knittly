@@ -1,19 +1,14 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-base-300 via-base-100 to-base-200">
-    <!-- Setup Screen -->
-    <Setup 
-      v-if="!informationSaved" 
+    <Setup
+      v-if="!informationSaved"
       @start-app="handleStartApp"
     />
-
-    <!-- Completion Screen -->
-    <Completion 
-      v-else-if="done" 
+    <Completion
+      v-else-if="done"
       @reset="handleReset"
     />
-
-    <!-- Main App Screen -->
-    <MainApp 
+    <MainApp
       v-else 
       :data="data"
       @update-data="handleUpdateData"

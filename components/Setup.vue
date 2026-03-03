@@ -3,7 +3,6 @@
     <div class="w-full max-w-md lg:max-w-2xl xl:max-w-4xl">
       <div class="card bg-base-100 shadow-2xl">
         <div class="card-body p-6 lg:p-12 space-y-8">
-          <!-- Header Section -->
           <div class="text-center space-y-6">
             <div
               class="w-20 h-20 lg:w-24 lg:h-24 mx-auto bg-gradient-to-r from-primary to-secondary rounded-3xl flex items-center justify-center"
@@ -27,15 +26,12 @@
             </div>
           </div>
 
-          <!-- Form Section -->
           <div class="space-y-6 lg:space-y-8">
-            <!-- Input Grid for Desktop -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               <NumberInput label="Anzahl Zunahmen" v-model="localData.increase" />
               <NumberInput label="Bereits gemachte Zunahmen" v-model="localData.increasesDone" :max="localData.increase" />
             </div>
 
-            <!-- Second Row -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
               <NumberInput
                 v-if="localData.increase > 0 && localData.increasesDone == localData.increase"
@@ -46,7 +42,6 @@
               <NumberInput label="Reihen im aktuellen Block" v-model="localData.rowsWorked" :max="7" />
             </div>
 
-            <!-- Start Button -->
             <div class="pt-4">
               <button
                 v-if="

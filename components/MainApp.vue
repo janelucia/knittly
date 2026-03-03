@@ -1,7 +1,6 @@
 <template>
   <div class="min-h-screen bg-base-200/30 p-4 lg:p-6">
     <div class="max-w-5xl mx-auto space-y-4 lg:space-y-6">
-      <!-- Compact Header -->
       <div class="card bg-base-100 shadow-sm border border-base-200">
         <div class="card-body p-4 lg:p-5">
           <div
@@ -15,9 +14,7 @@
               </h1>
               <p class="text-sm text-base-content/60">Strick-Assistent</p>
             </div>
-            <div
-              class="stats stats-horizontal bg-base-200/50 rounded-lg shadow-sm"
-            >
+            <div class="stats stats-horizontal rounded-lg">
               <div class="stat place-items-center py-3 px-4">
                 <div class="stat-title text-xs">Phase</div>
                 <div class="stat-value text-primary text-base lg:text-lg">
@@ -35,11 +32,8 @@
         </div>
       </div>
 
-      <!-- Desktop Grid Layout -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-        <!-- Main Counter (spans 2 columns on desktop) -->
         <div class="lg:col-span-2 space-y-4">
-          <!-- Alert Messages -->
           <div
             v-if="data.rowsWorked == 7 && isComplete"
             class="alert alert-success shadow-sm"
@@ -59,53 +53,56 @@
             >
           </div>
 
-          <!-- Row Counter -->
-          <div class="card bg-base-100 shadow-sm border border-base-200">
-            <div class="card-body p-4 lg:p-6">
-              <h2 class="text-lg lg:text-xl font-semibold text-center mb-4">
+          <div class="card bg-base-100 shadow-sm border border-base-200 h-full">
+            <div
+              class="card-body p-4 lg:p-8 flex flex-col items-center justify-center gap-6"
+            >
+              <h2 class="text-lg lg:text-xl font-semibold text-center">
                 Reihenzähler
               </h2>
-              <div class="flex items-center justify-center gap-6">
+              <div class="flex items-center justify-center gap-8">
                 <button
                   @click="decreaseAlreadyKnittedRows"
-                  class="btn btn-circle btn-lg btn-secondary shadow-md hover:shadow-lg transition-all duration-200"
+                  class="btn btn-circle btn-lg lg:btn-xl btn-secondary shadow-md hover:shadow-lg transition-all duration-200"
                 >
                   <Icon name="material-symbols:remove" class="text-xl" />
                 </button>
 
                 <div
-                  class="w-24 h-24 lg:w-28 lg:h-28 rounded-2xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg"
+                  class="w-32 h-32 lg:w-40 lg:h-40 rounded-3xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg"
                 >
-                  <span class="text-3xl lg:text-4xl font-bold text-white">{{
+                  <span class="text-5xl lg:text-6xl font-bold text-white">{{
                     data.rowsWorked
                   }}</span>
                 </div>
 
                 <button
                   @click="increaseAlreadyKnittedRows()"
-                  class="btn btn-circle btn-lg shadow-md hover:shadow-lg transition-all duration-200"
+                  class="btn btn-circle btn-lg lg:btn-xl shadow-md hover:shadow-lg transition-all duration-200"
                   :class="data.rowsWorked >= 7 ? 'btn-success' : 'btn-primary'"
                 >
                   <Icon
-                    :name="data.rowsWorked >= 7 ? 'material-symbols:check' : 'material-symbols:add'"
+                    :name="
+                      data.rowsWorked >= 7
+                        ? 'material-symbols:check'
+                        : 'material-symbols:add'
+                    "
                     class="text-xl"
                   />
                 </button>
               </div>
 
-              <!-- Block completion indicator -->
-              <div v-if="data.rowsWorked >= 7" class="text-center mt-3">
-                <div class="text-sm text-success font-medium">
-                  Block bereit zum Abschließen!
-                </div>
+              <div
+                v-if="data.rowsWorked >= 7"
+                class="text-sm text-success font-medium"
+              >
+                Block bereit zum Abschließen!
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Sidebar -->
         <div class="space-y-4">
-          <!-- Progress Circle -->
           <SidebarCard title="Fortschritt">
             <div class="flex justify-center">
               <div
@@ -117,22 +114,30 @@
                 }"
               >
                 <div class="text-center">
-                  <div class="text-lg font-bold">{{ Math.round(progress) }}%</div>
+                  <div class="text-lg font-bold">
+                    {{ Math.round(progress) }}%
+                  </div>
                   <div class="text-xs opacity-70">Fertig</div>
                 </div>
               </div>
             </div>
           </SidebarCard>
 
-          <!-- Project Stats -->
           <SidebarCard title="Projekt Details">
             <div class="space-y-2 text-sm">
-              <StatRow label="Zunahmen" :done="data.increasesDone" :total="data.increase" />
-              <StatRow label="Abnahmen" :done="data.decreasesDone" :total="data.decrease" />
+              <StatRow
+                label="Zunahmen"
+                :done="data.increasesDone"
+                :total="data.increase"
+              />
+              <StatRow
+                label="Abnahmen"
+                :done="data.decreasesDone"
+                :total="data.decrease"
+              />
             </div>
           </SidebarCard>
 
-          <!-- Tips Card -->
           <div
             class="card bg-gradient-to-br from-primary/5 to-secondary/5 border border-primary/20 shadow-sm"
           >
@@ -146,23 +151,29 @@
               </p>
             </div>
           </div>
-
-          <!-- Help Video (Compact) -->
-          <SidebarCard title="Video-Hilfe">
-            <div class="aspect-video rounded-lg overflow-hidden shadow-sm">
-              <iframe
-                class="w-full h-full"
-                :src="videoSrc"
-                :title="inDecreasePhase ? 'Abnahmen Tutorial' : 'Zunahmen Tutorial'"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              />
-            </div>
-          </SidebarCard>
         </div>
+
+        <SidebarCard title="Video-Hilfe" class="lg:col-span-3">
+          <div class="aspect-video rounded-lg overflow-hidden shadow-sm">
+            <iframe
+              class="w-full h-full"
+              :src="videoSrc"
+              :title="
+                inDecreasePhase ? 'Abnahmen Tutorial' : 'Zunahmen Tutorial'
+              "
+              allow="
+                accelerometer;
+                clipboard-write;
+                encrypted-media;
+                gyroscope;
+                picture-in-picture;
+              "
+              allowfullscreen
+            />
+          </div>
+        </SidebarCard>
       </div>
 
-      <!-- Bottom Actions -->
       <div class="p-4">
         <div class="flex justify-center">
           <label for="reset-modal" class="btn btn-outline btn-error btn-sm">
@@ -171,7 +182,6 @@
           </label>
         </div>
 
-        <!-- Reset Modal -->
         <input type="checkbox" id="reset-modal" class="modal-toggle" />
         <div class="modal">
           <div class="modal-box">
@@ -206,7 +216,7 @@
 </template>
 
 <script setup lang="ts">
-import type { KnittingData } from '~/types/knitting'
+import type { KnittingData } from "~/types/knitting";
 
 const props = defineProps<{
   data: KnittingData;
@@ -220,33 +230,42 @@ const emit = defineEmits<{
 
 const confirmReset = ref(false);
 
-const inDecreasePhase = computed(() => props.data.increase === props.data.increasesDone);
-const isComplete = computed(() => inDecreasePhase.value && props.data.decreasesDone >= props.data.decrease);
+const inDecreasePhase = computed(
+  () => props.data.increase === props.data.increasesDone,
+);
+const isComplete = computed(
+  () =>
+    inDecreasePhase.value && props.data.decreasesDone >= props.data.decrease,
+);
 
 const currentPhase = computed(() => {
-  if (isComplete.value) return 'Finale Reihen';
-  if (inDecreasePhase.value) return 'Abnahmen';
-  return 'Zunahmen';
+  if (isComplete.value) return "Finale Reihen";
+  if (inDecreasePhase.value) return "Abnahmen";
+  return "Zunahmen";
 });
 
 const progressCurrent = computed(() =>
-  inDecreasePhase.value ? props.data.decreasesDone + 1 : props.data.increasesDone + 1
+  inDecreasePhase.value
+    ? props.data.decreasesDone + 1
+    : props.data.increasesDone + 1,
 );
 
 const progressTotal = computed(() =>
-  inDecreasePhase.value ? props.data.decrease : props.data.increase
+  inDecreasePhase.value ? props.data.decrease : props.data.increase,
 );
 
 const progress = computed(() => {
   const totalSteps = (props.data.increase + props.data.decrease) * 8 + 7;
-  const completedSteps = (props.data.increasesDone + props.data.decreasesDone) * 8 + props.data.rowsWorked;
+  const completedSteps =
+    (props.data.increasesDone + props.data.decreasesDone) * 8 +
+    props.data.rowsWorked;
   return totalSteps > 0 ? (completedSteps / totalSteps) * 100 : 0;
 });
 
 const videoSrc = computed(() =>
   inDecreasePhase.value
-    ? 'https://www.youtube.com/embed/mxM5XXCLDlg?mute=1&autoplay=0'
-    : 'https://www.youtube.com/embed/T26XaiSL0aM?mute=1&autoplay=0'
+    ? "https://www.youtube.com/embed/mxM5XXCLDlg?mute=1&autoplay=0"
+    : "https://www.youtube.com/embed/T26XaiSL0aM?mute=1&autoplay=0",
 );
 
 const tips = [
@@ -257,15 +276,19 @@ const tips = [
   "Bei Fehlern: Nicht gleich auftrennen, manchmal lässt sich korrigieren.",
 ];
 
-const currentTip = computed(() =>
-  tips[(props.data.increasesDone + props.data.decreasesDone) % tips.length]
+const currentTip = computed(
+  () =>
+    tips[(props.data.increasesDone + props.data.decreasesDone) % tips.length],
 );
 
 const increaseAlreadyKnittedRows = () => {
   const newData = { ...props.data };
 
   if (newData.rowsWorked >= 7) {
-    if (newData.increase === newData.increasesDone && newData.decreasesDone >= newData.decrease) {
+    if (
+      newData.increase === newData.increasesDone &&
+      newData.decreasesDone >= newData.decrease
+    ) {
       return;
     }
     newData.rowsWorked = 0;
@@ -280,14 +303,21 @@ const increaseAlreadyKnittedRows = () => {
 
   emit("updateData", newData);
 
-  if (newData.increase === newData.increasesDone && newData.decreasesDone >= newData.decrease && newData.rowsWorked >= 7) {
+  if (
+    newData.increase === newData.increasesDone &&
+    newData.decreasesDone >= newData.decrease &&
+    newData.rowsWorked >= 7
+  ) {
     emit("done");
   }
 };
 
 const decreaseAlreadyKnittedRows = () => {
   if (props.data.rowsWorked > 0) {
-    emit("updateData", { ...props.data, rowsWorked: props.data.rowsWorked - 1 });
+    emit("updateData", {
+      ...props.data,
+      rowsWorked: props.data.rowsWorked - 1,
+    });
   }
 };
 

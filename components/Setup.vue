@@ -31,81 +31,19 @@
           <div class="space-y-6 lg:space-y-8">
             <!-- Input Grid for Desktop -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-              <div class="form-control space-y-2">
-                <label class="label">
-                  <span class="label-text font-semibold text-base lg:text-lg"
-                    >Anzahl Zunahmen</span
-                  >
-                </label>
-                <input
-                  v-model="localData.increase"
-                  type="number"
-                  min="0"
-                  step="1"
-                  class="input input-bordered input-lg text-center text-2xl lg:text-3xl font-bold"
-                  placeholder="0"
-                />
-              </div>
-
-              <div class="form-control space-y-2">
-                <label class="label">
-                  <span class="label-text font-semibold text-base lg:text-lg"
-                    >Bereits gemachte Zunahmen</span
-                  >
-                </label>
-                <input
-                  v-model="localData.increasesDone"
-                  type="number"
-                  min="0"
-                  step="1"
-                  :max="localData.increase"
-                  class="input input-bordered input-lg text-center text-2xl lg:text-3xl font-bold"
-                  placeholder="0"
-                />
-              </div>
+              <NumberInput label="Anzahl Zunahmen" v-model="localData.increase" />
+              <NumberInput label="Bereits gemachte Zunahmen" v-model="localData.increasesDone" :max="localData.increase" />
             </div>
 
             <!-- Second Row -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-              <div
-                v-if="
-                  localData.increase > 0 &&
-                  localData.increasesDone == localData.increase
-                "
-                class="form-control space-y-2"
-              >
-                <label class="label">
-                  <span class="label-text font-semibold text-base lg:text-lg"
-                    >Bereits gemachte Abnahmen</span
-                  >
-                </label>
-                <input
-                  v-model="localData.decreasesDone"
-                  type="number"
-                  min="0"
-                  step="1"
-                  :max="localData.decrease"
-                  class="input input-bordered input-lg text-center text-2xl lg:text-3xl font-bold"
-                  placeholder="0"
-                />
-              </div>
-
-              <div class="form-control space-y-2">
-                <label class="label">
-                  <span class="label-text font-semibold text-base lg:text-lg"
-                    >Reihen im aktuellen Block</span
-                  >
-                </label>
-                <input
-                  v-model="localData.rowsWorked"
-                  type="number"
-                  min="0"
-                  step="1"
-                  max="7"
-                  class="input input-bordered input-lg text-center text-2xl lg:text-3xl font-bold"
-                  placeholder="0"
-                />
-              </div>
+              <NumberInput
+                v-if="localData.increase > 0 && localData.increasesDone == localData.increase"
+                label="Bereits gemachte Abnahmen"
+                v-model="localData.decreasesDone"
+                :max="localData.decrease"
+              />
+              <NumberInput label="Reihen im aktuellen Block" v-model="localData.rowsWorked" :max="7" />
             </div>
 
             <!-- Start Button -->
